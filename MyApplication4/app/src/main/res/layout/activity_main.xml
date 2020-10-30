@@ -116,7 +116,7 @@
         android:layout_marginTop="10dp"
         android:hint="请输入密码"
         android:inputType="number"
-        android:maxLength="6"
+        android:maxLength="8"
         app:layout_constraintBottom_toBottomOf="@+id/tv_password"
         app:layout_constraintEnd_toStartOf="@+id/btn_forget"
         app:layout_constraintStart_toEndOf="@+id/tv_password"
@@ -173,6 +173,15 @@
         app:layout_constraintBottom_toBottomOf="@+id/sw_ios"
         app:layout_constraintStart_toEndOf="@+id/sw_ios"
         app:layout_constraintTop_toTopOf="@+id/sw_ios" />
+
+    <Button
+        android:id="@+id/btn_logon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="注册"
+        app:layout_constraintStart_toEndOf="@+id/et_password"
+        app:layout_constraintTop_toBottomOf="@+id/btn_forget" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

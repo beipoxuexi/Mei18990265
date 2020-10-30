@@ -10,6 +10,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
+
+import android.content.SharedPreferences;
+
+import com.example.myapplication4.bean.UserInfo;
+import com.example.myapplication4.database.UserDBHelper;
+
+import java.util.ArrayList;
+import java.util.Map;
+
+
 public class LoginForgetActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText et_password_first; // 声明一个编辑框对象
@@ -17,6 +28,11 @@ public class LoginForgetActivity extends AppCompatActivity implements View.OnCli
     private EditText et_verifycode; // 声明一个编辑框对象
     private String mVerifyCode; // 验证码
     private String mPhone; // 手机号码
+
+    private UserDBHelper mHelper; // 声明一个用户数据库帮助器的对象
+
+    SharedPreferences mContextSp;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +50,12 @@ public class LoginForgetActivity extends AppCompatActivity implements View.OnCli
 
         // 从前一个页面获取要修改密码的手机号码
         mPhone = getIntent().getStringExtra("phone");
+
+//        mShared = getSharedPreferences("share", MODE_PRIVATE);
+        mContextSp = this.getSharedPreferences( "share", MODE_PRIVATE );
     }
+
+
 
     @Override
     public void onClick(View v) {
@@ -53,6 +74,8 @@ public class LoginForgetActivity extends AppCompatActivity implements View.OnCli
             AlertDialog alert = builder.create();
             alert.show();
         } else if (v.getId() == R.id.btn_confirm) { // 点击了“确定”按钮
+
+
             String password_first = et_password_first.getText().toString();
             String password_second = et_password_second.getText().toString();
             if (password_first.length() < 6 || password_second.length() < 6) {
@@ -66,6 +89,52 @@ public class LoginForgetActivity extends AppCompatActivity implements View.OnCli
             if (!et_verifycode.getText().toString().equals(mVerifyCode)) {
                 Toast.makeText(this, "请输入正确的验证码", Toast.LENGTH_SHORT).show();
             } else {
+
+                SharedPreferences shared = getSharedPreferences("share", MODE_PRIVATE);
+                Map<String, Object> mapParam = (Map<String, Object>) shared.getAll();
+
+                String input_password=password_first;
+
+                SharedPreferences.Editor editor = mContextSp.edit();
+
+                for (Map.Entry<String, Object> item_map : mapParam.entrySet()) {
+                    String key = item_map.getKey(); // 获取该配对的键信息
+
+                    if (key.equals("pwd")) {
+                        editor.putString( "pwd", input_password );
+                        editor.commit();
+                    }
+                }
+
+
+
+
+//
+//                ArrayList<UserInfo> userArray = new ArrayList<UserInfo>();
+
+//                userArray = mHelper.query("1=1");
+
+////
+//
+//                for (int i = 0; i < userArray.size(); i++) {
+//                    UserInfo info = userArray.get(i);
+//
+//                    if(info.phone.equals(mPhone)){
+//                        info.pwd=password_first;
+//                        mHelper.openWriteLink();
+//                        mHelper.update(info,"pwd="+info.pwd);
+//                    }
+//                }
+
+                mHelper=UserDBHelper.getInstance(this,2);
+                mHelper.openWriteLink();
+                UserInfo info=new UserInfo();
+                info.pwd=password_first;
+                mHelper.update(info,"pwd="+info.pwd);
+                mHelper.closeLink();
+
+
+
                 Toast.makeText(this, "密码修改成功", Toast.LENGTH_SHORT).show();
                 // 把修改好的新密码返回给前一个页面
                 Intent intent = new Intent();

@@ -10,7 +10,6 @@ import android.widget.EditText;
 import java.lang.reflect.Field;
 
 public class ViewUtil {
-
     // 获取编辑框的最大长度，通过反射机制调用隐藏方法
     public static int getMaxLength(EditText et) {
         int length = 0;
@@ -53,5 +52,4 @@ public class ViewUtil {
         // 关闭屏幕上的输入法软键盘
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
-
 }

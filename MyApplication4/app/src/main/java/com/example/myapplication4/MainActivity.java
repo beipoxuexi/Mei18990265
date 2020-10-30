@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,7 +23,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication4.util.DateUtil;
 import com.example.myapplication4.util.ViewUtil;
+
+import android.content.SharedPreferences;
+
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -42,7 +46,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText et_password; // 声明一个编辑框对象
     private Button btn_forget; // 声明一个忘记密码按钮控件对象
     private Button btn_login; // 声明一个登录按钮控件对象
+    private Button btn_logon; // 声明一个注册按钮控件对象
 //    private CheckBox ck_remember; // 声明一个复选框对象
+
+
+    private EditText ct_name;
+    private EditText ct_phonenumber;
+    private EditText ct_password;
+    private SharedPreferences mShared; // 声明一个共享参数对象
+
 
     private int mRequestCode = 0; // 跳转页面时的请求代码
     private int mType = 2; // 用户类型
@@ -70,7 +82,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         et_password = findViewById(R.id.et_password);
         btn_forget = findViewById(R.id.btn_forget);
         btn_login = findViewById(R.id.btn_login);
+        btn_logon = findViewById(R.id.btn_logon);
 //        ck_remember = findViewById(R.id.ck_remember);
+
+
+        mShared = getSharedPreferences("share", MODE_PRIVATE);
+
+
 
         // 给rg_login设置单选监听器
         rg_login.setOnCheckedChangeListener(new RadioListener());
@@ -81,9 +99,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btn_forget.setOnClickListener(this);
         btn_login.setOnClickListener(this);
+        btn_logon.setOnClickListener(this);
 
         initTypeSpinner();
-
     }
     // 刷新Switch按钮的开关状态说明
 //    private void refreshResult(CompoundButton buttonView) {
@@ -184,7 +202,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+
+
+
         String phone = et_phone.getText().toString();
+
         if (v.getId() == R.id.btn_forget) { // 点击了“忘记密码”按钮
             if (phone.length() < 11) { // 手机号码不足11位
                 Toast.makeText(this, "请输入正确的手机号", Toast.LENGTH_SHORT).show();
@@ -212,11 +234,67 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return;
             }
             if (rb_password.isChecked()) { // 密码方式校验
-                //输入的密码跟mPassword比较
-                if (!et_password.getText().toString().equals(mPassword)) {
+
+                SharedPreferences shared1 = getSharedPreferences("share", MODE_PRIVATE);
+                Map<String, Object> mapParam1 = (Map<String, Object>) shared1.getAll();
+
+                //for (Map.Entry<String, Object> item_map : mapParam1.entrySet()) {
+                //    String key = item_map.getKey(); // 获取该配对的键信息
+                    et_phone.setText( shared1.getString("phone", ""));
+                    et_password.setText( shared1.getString("pwd", ""));
+                //}
+
+
+
+
+
+                SharedPreferences shared = getSharedPreferences("share", MODE_PRIVATE);
+                Map<String, Object> mapParam = (Map<String, Object>) shared.getAll();
+
+                String input_password=et_password.getText().toString();
+                String input_phone=et_phone.getText().toString();
+
+                String remembered_password="";
+                String remembered_phone="";
+
+                for (Map.Entry<String, Object> item_map : mapParam.entrySet()) {
+                    String key = item_map.getKey(); // 获取该配对的键信息
+                    Object value = item_map.getValue(); // 获取该配对的值信息
+                    if (key.equals("phone")) { // 如果配对值的类型为字符串
+                        remembered_phone = shared.getString(key, "");
+//                        desc = String.format("%s\n　%s的取值为%s", desc, key,
+//                                shared.getString(key, ""));
+                    }
+                    if (key.equals("pwd")) {
+                        remembered_password = shared.getString(key, "");
+                    }
+                }
+
+                if (!et_password.getText().toString().equals(remembered_password) || !et_phone.getText().toString().equals(remembered_phone)) {
                     Toast.makeText(this, "请输入正确的密码", Toast.LENGTH_SHORT).show();
                 } else { // 密码校验通过
                     loginSuccess(); // 提示用户登录成功
+
+                    //如果选择了记住密码
+                    if(sw_ios.isChecked()){
+
+
+
+                        ct_phonenumber = findViewById(R.id.et_phone);
+                        ct_password = findViewById(R.id.et_password);
+
+
+
+                        String phone_num = ct_phonenumber.getText().toString();
+                        String pwd = ct_password.getText().toString();
+
+                        SharedPreferences.Editor editor = mShared.edit(); // 获得编辑器的对象
+
+                        editor.putString("phone", phone_num); // 添加一个名叫age的整型参数
+                        editor.putString("pwd",pwd); // 添加一个名叫height的长整型参数
+                        editor.putString("update_time", DateUtil.getNowDateTime("yyyy-MM-dd HH:mm:ss"));
+                        editor.commit(); // 提交编辑器中的修改
+                    }
                 }
             } else if (rb_verifycode.isChecked()) { // 验证码方式校验
                 if (!et_password.getText().toString().equals(mVerifyCode)) {
@@ -225,6 +303,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     loginSuccess(); // 提示用户登录成功
                 }
             }
+        }
+        else if (v.getId() == R.id.btn_logon){
+            Intent intent = new Intent(this, WriteActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -263,5 +345,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog alert = builder.create();
         alert.show();
     }
-
 }
