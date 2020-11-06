@@ -233,15 +233,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "请输入正确的手机号", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (rb_password.isChecked()) { // 密码方式校验
+            if (et_password.getText().length()==0&&et_phone.getText().length()==0){ // 密码方式校验
 
-                SharedPreferences shared1 = getSharedPreferences("share", MODE_PRIVATE);
-                Map<String, Object> mapParam1 = (Map<String, Object>) shared1.getAll();
+                mShared=getSharedPreferences("share", MODE_PRIVATE);
+                //Map<String, Object> mapParam1 = (Map<String, Object>) shared1.getAll();
 
                 //for (Map.Entry<String, Object> item_map : mapParam1.entrySet()) {
                 //    String key = item_map.getKey(); // 获取该配对的键信息
-                    et_phone.setText( shared1.getString("phone", ""));
-                    et_password.setText( shared1.getString("pwd", ""));
+                    String phone1=mShared.getString("phone", "");
+                    String password1=mShared.getString("pwd", "");
+                    et_phone.setText(phone1);
+                    et_password.setText(password1);
+
                 //}
 
 
