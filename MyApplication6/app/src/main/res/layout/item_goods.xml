@@ -4,7 +4,11 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:descendantFocusability="blocksDescendants"
-    android:orientation="vertical">
+    android:orientation="vertical"
+
+    android:paddingVertical="10dp"
+    android:paddingHorizontal="4dp"
+    >
 
     <ImageView
         android:id="@+id/iv_thumb"
@@ -18,7 +22,10 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/black"
-        android:textSize="17sp" />
+        android:textSize="17sp"
+
+        android:layout_margin="10dp"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"

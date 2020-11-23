@@ -6,7 +6,9 @@
     android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="10dp"
+    android:paddingRight="10dp"
+    >
 
     <ImageView
         android:id="@+id/iv_thumb"
