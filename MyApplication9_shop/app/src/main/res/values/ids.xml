@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="ll_cart" type="id" />
+    <item name="et_name" type="id" />
+    <item name="et_age" type="id" />
+    <item name="et_height" type="id" />
+    <item name="et_weight" type="id" />
+    <item name="et_pwd" type="id" />
+    <item name="et_repwd" type="id" />
+    <item name="btn_save" type="id" />
+    <item name="sp_married" type="id" />
+    <item name="tv_age" type="id" />
+    <item name="tv_height" type="id" />
+    <item name="tv_weight" type="id" />
+    <item name="tv_pwd" type="id" />
+    <item name="tv_repwd" type="id" />
+    <item name="tw_phone" type="id" />
+    <item name="tv_married" type="id" />
+</resources>
